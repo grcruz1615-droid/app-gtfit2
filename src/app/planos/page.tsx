@@ -1,11 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { Check, X, Zap, Dumbbell, Camera, TrendingUp, Award, Crown, ArrowLeft } from "lucide-react";
+import { Check, X, Zap, Dumbbell, Crown, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
 export default function Planos() {
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("monthly");
+
   const features = {
     basico: [
       { text: "1 plano de treino semanal fixo", included: true },
@@ -33,6 +36,17 @@ export default function Planos() {
     ]
   };
 
+  const prices = {
+    basico: {
+      monthly: { price: 29.90, original: 59.90, installment: 2.49 },
+      annual: { price: 299.90, original: 599.90, installment: 24.99, monthlyEquivalent: 24.99 }
+    },
+    premium: {
+      monthly: { price: 99.90, original: 199.90, installment: 8.32 },
+      annual: { price: 999.90, original: 1999.90, installment: 83.32, monthlyEquivalent: 83.32 }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">
       {/* Header */}
@@ -46,10 +60,10 @@ export default function Planos() {
               </span>
             </Link>
             
-            <Link href="/dashboard">
+            <Link href="/">
               <Button variant="outline" className="border-gray-700 text-gray-300 hover:text-white">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Voltar ao Dashboard
+                Voltar ao Início
               </Button>
             </Link>
           </div>
@@ -72,9 +86,36 @@ export default function Planos() {
             </span>
           </h1>
 
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-4">
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
             Comece grátis e faça upgrade quando quiser. Sem compromisso, cancele quando quiser.
           </p>
+
+          {/* Billing Cycle Toggle */}
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <button
+              onClick={() => setBillingCycle("monthly")}
+              className={`px-6 py-3 rounded-lg font-bold transition-all ${
+                billingCycle === "monthly"
+                  ? "bg-gradient-to-r from-orange-500 to-pink-600 text-white"
+                  : "bg-gray-800 text-gray-400 hover:text-white"
+              }`}
+            >
+              Mensal
+            </button>
+            <button
+              onClick={() => setBillingCycle("annual")}
+              className={`px-6 py-3 rounded-lg font-bold transition-all relative ${
+                billingCycle === "annual"
+                  ? "bg-gradient-to-r from-orange-500 to-pink-600 text-white"
+                  : "bg-gray-800 text-gray-400 hover:text-white"
+              }`}
+            >
+              Anual
+              <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+                -17%
+              </span>
+            </button>
+          </div>
 
           <p className="text-orange-400 font-bold text-lg">
             💳 Parcelamento em até 12x sem juros no cartão de crédito
@@ -93,8 +134,27 @@ export default function Planos() {
                   <Dumbbell className="w-8 h-8 text-gray-400" />
                 </div>
                 <h2 className="text-3xl font-black mb-2 text-white">Plano Básico</h2>
-                <div className="text-5xl font-black text-white mb-2">GRÁTIS</div>
-                <p className="text-gray-400">Para sempre</p>
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <span className="text-2xl text-gray-500 line-through">
+                    R$ {prices.basico[billingCycle].original.toFixed(2)}
+                  </span>
+                  <span className="text-5xl font-black text-white">
+                    R$ {prices.basico[billingCycle].price.toFixed(2)}
+                  </span>
+                </div>
+                <p className="text-gray-400 mb-2">
+                  {billingCycle === "monthly" ? "por mês" : "por ano"}
+                </p>
+                {billingCycle === "annual" && (
+                  <p className="text-green-400 font-semibold text-sm mb-2">
+                    Equivalente a R$ {prices.basico.annual.monthlyEquivalent.toFixed(2)}/mês
+                  </p>
+                )}
+                <div className="inline-block bg-orange-500/20 border border-orange-500/30 rounded-lg px-4 py-2">
+                  <p className="text-orange-400 font-bold text-sm">
+                    💳 ou 12x de R$ {prices.basico[billingCycle].installment.toFixed(2)} sem juros
+                  </p>
+                </div>
               </div>
 
               <div className="flex-1">
@@ -114,18 +174,17 @@ export default function Planos() {
                 </ul>
               </div>
 
-              <Link href="/dashboard" className="block">
+              <Link href={`/pagamento?plan=basico&cycle=${billingCycle}`} className="block">
                 <Button 
                   size="lg"
-                  variant="outline" 
-                  className="w-full border-gray-600 hover:bg-gray-700 font-bold text-lg py-6"
+                  className="w-full bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 font-bold text-lg py-6"
                 >
-                  Começar Grátis
+                  Começar Agora
                 </Button>
               </Link>
 
               <p className="text-center text-gray-500 text-xs mt-4">
-                Sem cartão de crédito necessário
+                Cancele quando quiser
               </p>
             </Card>
 
@@ -144,17 +203,27 @@ export default function Planos() {
                   <h2 className="text-3xl font-black mb-2 text-orange-400">Plano Premium</h2>
                   
                   <div className="flex items-center justify-center gap-3 mb-2">
-                    <span className="text-2xl text-gray-500 line-through">R$ 79,90</span>
+                    <span className="text-2xl text-gray-500 line-through">
+                      R$ {prices.premium[billingCycle].original.toFixed(2)}
+                    </span>
                     <span className="text-5xl font-black bg-gradient-to-r from-orange-400 to-pink-600 bg-clip-text text-transparent">
-                      R$ 39,90
+                      R$ {prices.premium[billingCycle].price.toFixed(2)}
                     </span>
                   </div>
                   
-                  <p className="text-gray-400 mb-2">por mês</p>
+                  <p className="text-gray-400 mb-2">
+                    {billingCycle === "monthly" ? "por mês" : "por ano"}
+                  </p>
+                  
+                  {billingCycle === "annual" && (
+                    <p className="text-green-400 font-semibold text-sm mb-2">
+                      Equivalente a R$ {prices.premium.annual.monthlyEquivalent.toFixed(2)}/mês
+                    </p>
+                  )}
                   
                   <div className="inline-block bg-orange-500/20 border border-orange-500/30 rounded-lg px-4 py-2">
                     <p className="text-orange-400 font-bold text-sm">
-                      💳 ou 12x de R$ 3,32 sem juros
+                      💳 ou 12x de R$ {prices.premium[billingCycle].installment.toFixed(2)} sem juros
                     </p>
                   </div>
                 </div>
@@ -170,13 +239,15 @@ export default function Planos() {
                   </ul>
                 </div>
 
-                <Button 
-                  size="lg"
-                  className="w-full bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 text-white font-black text-lg py-6 shadow-2xl hover:scale-105 transition-all duration-300"
-                >
-                  <Zap className="w-5 h-5 mr-2" />
-                  Assinar Premium - 50% OFF
-                </Button>
+                <Link href={`/pagamento?plan=premium&cycle=${billingCycle}`} className="block">
+                  <Button 
+                    size="lg"
+                    className="w-full bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 text-white font-black text-lg py-6 shadow-2xl hover:scale-105 transition-all duration-300"
+                  >
+                    <Zap className="w-5 h-5 mr-2" />
+                    Assinar Premium - 50% OFF
+                  </Button>
+                </Link>
 
                 <p className="text-center text-gray-400 text-xs mt-4">
                   ✓ Cancele quando quiser • ✓ Garantia de 7 dias • ✓ Suporte 24/7
@@ -260,7 +331,7 @@ export default function Planos() {
                 Posso cancelar a qualquer momento?
               </h3>
               <p className="text-gray-300 leading-relaxed">
-                Sim! Você pode cancelar sua assinatura Premium a qualquer momento, sem multas ou taxas. 
+                Sim! Você pode cancelar sua assinatura a qualquer momento, sem multas ou taxas. 
                 Você continuará tendo acesso até o final do período pago.
               </p>
             </Card>
@@ -270,18 +341,9 @@ export default function Planos() {
                 Como funciona o parcelamento?
               </h3>
               <p className="text-gray-300 leading-relaxed">
-                Você pode parcelar o plano anual em até 12x sem juros no cartão de crédito. 
-                São 12 parcelas de R$ 3,32 (total R$ 39,90/mês com 50% OFF).
-              </p>
-            </Card>
-
-            <Card className="bg-gray-800 border-gray-700 p-6">
-              <h3 className="text-xl font-bold text-white mb-3">
-                Preciso de cartão de crédito para o plano básico?
-              </h3>
-              <p className="text-gray-300 leading-relaxed">
-                Não! O plano básico é 100% gratuito e não requer cartão de crédito. 
-                Você só precisa criar uma conta para começar a usar.
+                Você pode parcelar em até 12x sem juros no cartão de crédito. 
+                Plano Básico: 12x de R$ 2,49 (mensal) ou 12x de R$ 24,99 (anual) | 
+                Plano Premium: 12x de R$ 8,32 (mensal) ou 12x de R$ 83,32 (anual)
               </p>
             </Card>
 
@@ -290,7 +352,7 @@ export default function Planos() {
                 A garantia de 7 dias funciona como?
               </h3>
               <p className="text-gray-300 leading-relaxed">
-                Se você não ficar satisfeito com o Premium nos primeiros 7 dias, devolvemos 100% do seu dinheiro. 
+                Se você não ficar satisfeito nos primeiros 7 dias, devolvemos 100% do seu dinheiro. 
                 Sem perguntas, sem complicação.
               </p>
             </Card>
@@ -309,19 +371,19 @@ export default function Planos() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link href="/dashboard">
+            <Link href="/pagamento">
               <Button 
                 size="lg"
                 className="bg-white text-pink-600 hover:bg-gray-100 font-black text-lg px-12 py-6 rounded-xl shadow-2xl hover:scale-105 transition-all duration-300"
               >
                 <Zap className="w-6 h-6 mr-2" />
-                COMEÇAR GRÁTIS AGORA
+                COMEÇAR AGORA
               </Button>
             </Link>
           </div>
 
           <p className="text-white/80 text-sm mt-6">
-            ✓ Sem cartão de crédito • ✓ Cancele quando quiser • ✓ Suporte 24/7
+            ✓ Sem cartão de crédito para teste • ✓ Cancele quando quiser • ✓ Suporte 24/7
           </p>
         </div>
       </section>

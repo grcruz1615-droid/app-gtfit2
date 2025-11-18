@@ -42,7 +42,7 @@ export default function Home() {
 
             {/* CTA Principal - BRASILEIRO */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-              <Link href="/dashboard">
+              <Link href="/login">
                 <Button 
                   size="lg" 
                   className="bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 text-white font-bold text-lg px-8 py-6 rounded-xl shadow-2xl hover:scale-105 transition-all duration-300"
@@ -193,8 +193,12 @@ export default function Home() {
             <Card className="bg-gray-800 border-gray-700 p-8">
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold mb-2">Plano Básico</h3>
-                <div className="text-5xl font-black text-white mb-2">GRÁTIS</div>
-                <p className="text-gray-400">Para sempre</p>
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <span className="text-2xl text-gray-500 line-through">R$ 59,90</span>
+                  <span className="text-5xl font-black text-white">R$ 29,90</span>
+                </div>
+                <p className="text-gray-400">por mês</p>
+                <p className="text-orange-400 font-bold text-sm mt-2">ou 12x de R$ 2,49 sem juros</p>
               </div>
               
               <ul className="space-y-4 mb-8">
@@ -216,9 +220,9 @@ export default function Home() {
                 </li>
               </ul>
 
-              <Link href="/dashboard" className="block">
-                <Button variant="outline" className="w-full border-gray-600 hover:bg-gray-700">
-                  Começar Grátis
+              <Link href="/pagamento" className="block">
+                <Button className="w-full bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 font-bold">
+                  Começar Agora
                 </Button>
               </Link>
             </Card>
@@ -233,11 +237,11 @@ export default function Home() {
                 <div className="text-center mb-8">
                   <h3 className="text-2xl font-bold mb-2 text-orange-400">Plano Premium</h3>
                   <div className="flex items-center justify-center gap-2 mb-2">
-                    <span className="text-2xl text-gray-500 line-through">R$ 79,90</span>
-                    <span className="text-5xl font-black bg-gradient-to-r from-orange-400 to-pink-600 bg-clip-text text-transparent">R$ 39,90</span>
+                    <span className="text-2xl text-gray-500 line-through">R$ 199,90</span>
+                    <span className="text-5xl font-black bg-gradient-to-r from-orange-400 to-pink-600 bg-clip-text text-transparent">R$ 99,90</span>
                   </div>
                   <p className="text-gray-400">por mês</p>
-                  <p className="text-orange-400 font-bold text-sm mt-2">ou 12x de R$ 3,32 sem juros</p>
+                  <p className="text-orange-400 font-bold text-sm mt-2">ou 12x de R$ 8,32 sem juros</p>
                 </div>
                 
                 <ul className="space-y-4 mb-8">
@@ -267,7 +271,7 @@ export default function Home() {
                   </li>
                 </ul>
 
-                <Link href="/planos" className="block">
+                <Link href="/pagamento" className="block">
                   <Button className="w-full bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 text-white font-bold text-lg py-6 shadow-2xl hover:scale-105 transition-all duration-300">
                     Assinar Premium - 50% OFF
                   </Button>
@@ -342,7 +346,7 @@ export default function Home() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
-            <Link href="/dashboard">
+            <Link href="/login">
               <Button 
                 size="lg" 
                 className="bg-white text-pink-600 hover:bg-gray-100 font-bold text-lg px-12 py-6 rounded-xl shadow-2xl hover:scale-105 transition-all duration-300"
